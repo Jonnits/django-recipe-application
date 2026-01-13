@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Recipe Application</title>
+    <title>Sign Up - Recipe Application</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            max-width: 400px;
+            max-width: 500px;
             width: 100%;
         }
         h1 {
@@ -44,6 +44,11 @@
             margin-bottom: 20px;
             text-align: center;
         }
+        .field-errors {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 5px;
+        }
         form {
             display: flex;
             flex-direction: column;
@@ -58,6 +63,7 @@
             font-weight: bold;
         }
         form input[type="text"],
+        form input[type="email"],
         form input[type="password"] {
             width: 100%;
             padding: 10px;
@@ -67,9 +73,15 @@
             box-sizing: border-box;
         }
         form input[type="text"]:focus,
+        form input[type="email"]:focus,
         form input[type="password"]:focus {
             outline: none;
             border-color: #d47611;
+        }
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
         }
         button {
             font-family: "Lora", serif;
@@ -83,33 +95,9 @@
             cursor: pointer;
             transition: background 0.3s, color 0.3s;
             margin-top: 10px;
-            width: 100%;
-            box-sizing: border-box;
         }
         button:hover {
             background: #d47611;
-            color: white;
-        }
-        .signup-button {
-            font-family: "Lora", serif;
-            font-weight: 500;
-            font-size: 1.5em;
-            padding: 12px 30px;
-            background: #d47611;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s, color 0.3s;
-            margin-top: 10px;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        .signup-button:hover {
-            background: #b8650e;
             color: white;
         }
         .back-link {
@@ -145,15 +133,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Login</h1>
-        
-        {% if messages %}
-            {% for message in messages %}
-                <div class="error-message" style="background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb;">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
+        <h1>Sign Up</h1>
         
         {% if error_message %}
             <div class="error-message">{{ error_message }}</div>
@@ -161,15 +141,27 @@
         
         <form action="" method="POST">
             {% csrf_token %}
-            {{ form }}
-            <button type="submit">Login</button>
+            {% for field in form %}
+                <p>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}
+                        <span class="help-text">{{ field.help_text }}</span>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="field-errors">
+                            {% for error in field.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </p>
+            {% endfor %}
+            <button type="submit">Sign Up</button>
         </form>
         
-        <div style="text-align: center; margin-top: 15px;">
-            <a href="{% url 'register' %}" class="signup-button">Sign Up</a>
-        </div>
-        
         <div class="back-link">
+            <a href="{% url 'login' %}">Already have an account? Login</a> |
             <a href="{% url 'recipes:recipes_home' %}">← Back to Home</a>
         </div>
     </div>
@@ -180,3 +172,4 @@
     </footer>
 </body>
 </html>
+

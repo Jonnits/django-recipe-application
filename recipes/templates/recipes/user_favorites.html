@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Application - All Recipes</title>
+    <title>{{ user.username }}'s Favorite Recipes</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -30,11 +30,6 @@
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-        }
-        .header-buttons {
-            display: flex;
-            gap: 10px;
             align-items: center;
         }
         .header h1 {
@@ -64,16 +59,11 @@
             padding: 20px;
             flex: 1;
         }
-        .top-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .search-button {
+        .back-button {
             font-family: "Lora", serif;
             font-weight: 500;
             display: inline-block;
+            margin-bottom: 20px;
             padding: 10px 25px;
             background: #f0cfad;
             color: #d47611;
@@ -81,7 +71,7 @@
             border-radius: 5px;
             transition: background 0.3s, color 0.3s;
         }
-        .search-button:hover {
+        .back-button:hover {
             background: #d47611;
             color: white;
         }
@@ -147,32 +137,37 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-        .back-button {
-            font-family: "Lora", serif;
-            font-weight: 500;
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 10px 25px;
-            background: #f0cfad;
-            color: #d47611;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s, color 0.3s;
-        }
-        .back-button:hover {
-            background: #d47611;
-            color: white;
-        }
-        .no-recipes {
+        .no-favorites {
             text-align: center;
             padding: 60px 20px;
             background: white;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        .no-recipes p {
+        .no-favorites p {
             color: #666;
             font-size: 18px;
+        }
+        .delete-profile {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #f0cfad;
+            text-align: center;
+            width: 100%;
+        }
+        .delete-profile-link {
+            font-family: "Lora", serif;
+            font-weight: 500;
+            display: inline-block;
+            padding: 10px 25px;
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .delete-profile-link:hover {
+            background: #c82333;
         }
         footer {
             background: #d47611;
@@ -197,39 +192,16 @@
 <body>
     <div class="header">
         <div class="header-content">
-            <h1>All Recipes</h1>
-            {% if user.is_authenticated %}
-                <div class="header-buttons">
-                    <a href="{% url 'recipes:user_favorites' %}" class="header-logout">Favorites</a>
-                    <a href="{% url 'logout' %}" class="header-logout">Logout</a>
-                </div>
-            {% endif %}
+            <h1>{{ user.username }}'s Favorite Recipes</h1>
+            <a href="{% url 'logout' %}" class="header-logout">Logout</a>
         </div>
     </div>
     <div class="container">
-        {% if messages %}
-            <div style="margin-bottom: 20px;">
-                {% for message in messages %}
-                    <div style="background: #d1ecf1; color: #0c5460; padding: 10px; border-radius: 5px; margin-bottom: 10px; border: 1px solid #bee5eb;">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+        <a href="{% url 'recipes:recipes_list' %}" class="back-button">← Back to All Recipes</a>
         
-        <div class="top-section">
-            <a href="{% url 'recipes:recipes_home' %}" class="back-button">← Back to Home</a>
-            <div style="display: flex; gap: 10px;">
-                <a href="{% url 'recipes:recipe_search' %}" class="search-button">Search Recipes</a>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'recipes:add_recipe' %}" class="search-button">Add Recipe</a>
-                {% endif %}
-            </div>
-        </div>
-        
-        {% if recipes %}
+        {% if favorites %}
             <div class="recipes-grid">
-                {% for recipe in recipes %}
+                {% for recipe in favorites %}
                     <a href="{% url 'recipes:recipe_detail' recipe.id %}" class="recipe-card">
                         {% if recipe.pic %}
                             <img src="{{ recipe.pic.url }}" alt="{{ recipe.name }}" class="recipe-image">
@@ -248,10 +220,14 @@
                 {% endfor %}
             </div>
         {% else %}
-            <div class="no-recipes">
-                <p>No recipes available yet. Check back soon!</p>
+            <div class="no-favorites">
+                <p>You haven't favorited any recipes yet. Start exploring and add some favorites!</p>
             </div>
         {% endif %}
+        
+        <div class="delete-profile">
+            <a href="{% url 'delete_profile' %}" class="delete-profile-link">Delete My Profile</a>
+        </div>
     </div>
     <footer>
         <p>
@@ -260,3 +236,4 @@
     </footer>
 </body>
 </html>
+
