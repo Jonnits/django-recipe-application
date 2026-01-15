@@ -116,8 +116,7 @@ src/
    ```
 
 7. **Access the application**:
-   - Homepage: http://127.0.0.1:8000/
-   - Admin panel: http://127.0.0.1:8000/admin/
+   - Homepage: https://recipeproject-948ae1464a4d.herokuapp.com/
 
 ## Environment Variables
 
